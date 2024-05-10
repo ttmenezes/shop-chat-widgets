@@ -151,6 +151,7 @@ function createChatWidget() {
     chatWidget.style.right = "20px";
     chatWidget.style.width = "400px";
     chatWidget.style.height = "664px";
+    chatWidget.style.zIndex = "1000";
     // chatWidget.style.backgroundColor = "#fff";
     // chatWidget.style.border = "1px solid #ccc";
     chatWidget.style.display = "none"; // Hide initially
@@ -161,7 +162,7 @@ function createChatWidget() {
     chatWidget.innerHTML = `
         <div class="flex flex-col space-y-1.5 p-6 border-b" data-id="8">
             <div class="flex-1" data-id="9">
-                <h2 class="text-lg font-bold leading-none mb-2" data-id="10">Shila - your Shilajit bot</h2>
+                <h2 class="text-lg font-bold leading-none mb-2" data-id="10">Shila - your Shilajit assistant</h2>
                 <p class="text-sm leading-none text-gray-500 dark:text-gray-400" data-id="11">
                     Ask me anything about Shilajit!
                 </p>
@@ -267,6 +268,7 @@ function createCircleIcon() {
     circleIcon.style.alignItems = "center";
     circleIcon.style.color = "#fff";
     circleIcon.style.fontSize = "24px";
+    circleIcon.style.zIndex = "1000";
 
     // Set icon text
     // circleIcon.innerText = "+";
