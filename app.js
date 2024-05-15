@@ -164,7 +164,10 @@ function createChatWidget() {
             <div class="flex-1" data-id="9">
                 <h2 class="text-lg font-bold leading-none mb-2" data-id="10">Shila - your Shilajit assistant</h2>
                 <p class="text-sm leading-none text-gray-500 dark:text-gray-400" data-id="11">
-                    Ask me anything about Shilajit!
+                    Ask me anything about Shilajit! 
+                    <span id="tooltip-medical" class="tooltip">
+                        &#9432
+                    </span>
                 </p>
             </div>
         </div>
@@ -175,6 +178,47 @@ function createChatWidget() {
                 </div>
             </div>
         </div>`
+
+    // tooltip styling for medical disclaimer
+    const tooltip = document.getElementById('tooltip-medical');
+    tooltip.style.position = 'relative';
+    tooltip.style.display = 'inline-block';
+
+    const tooltipText = document.createElement('span');
+        tooltipText.className = 'tooltiptext';
+        tooltipText.innerText = 'Black Lotus does not provide medical advice. Please consult a doctor for the benefits and risks of adding any supplement to your diet.';
+
+        tooltipText.style.visibility = 'hidden';
+        tooltipText.style.position = 'absolute';
+        tooltipText.style.display = "flex";
+        tooltipText.style.justifyContent = "center";
+        tooltipText.style.alignItems = "center";
+        tooltipText.style.width = '15rem';
+        tooltipText.style.backgroundColor = '#d3d3d3';
+        tooltipText.style.color = '#36454F';
+        tooltipText.style.textAlign = 'center';
+        tooltipText.style.borderRadius = '3px';
+        tooltipText.style.padding = '5px 0';
+        tooltipText.style.zIndex = '1';
+        tooltipText.style.bottom = '95%';
+        tooltipText.style.left = '50%';
+        tooltipText.style.marginLeft = '-110px';
+        tooltipText.style.opacity = '0';
+        tooltipText.style.transition = 'opacity 0.2s';
+        tooltipText.style.fontSize = '0.6rem'
+
+    tooltip.appendChild(tooltipText);
+
+    tooltip.addEventListener('mouseover', () => {
+        tooltipText.style.visibility = 'visible';
+        tooltipText.style.opacity = '1';
+    });
+
+    tooltip.addEventListener('mouseout', () => {
+        tooltipText.style.visibility = 'hidden';
+        tooltipText.style.opacity = '0';
+    });
+
 
     // chat chips
     var chatChipsContainer = document.createElement("div");
