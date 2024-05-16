@@ -143,14 +143,16 @@ function createChatWidget() {
     var chatWidget = document.createElement("div");
     chatWidget.setAttribute("id", "chat-widget");
 
-    chatWidget.className = "rounded-lg border bg-card text-card-foreground shadow-sm justify-between flex-col bg-white"
-    
+    // Add styling classes for responsiveness 
+    chatWidget.className = "rounded-lg border bg-card text-card-foreground shadow-sm justify-between flex-col bg-white h-full ml-4 lg:w-[400px] lg:h-[664px] md:ml-0";
+
+
     // Style chat widget
     chatWidget.style.position = "fixed";
     chatWidget.style.bottom = "84px";
     chatWidget.style.right = "20px";
-    chatWidget.style.width = "400px";
-    chatWidget.style.height = "664px";
+    chatWidget.style.maxWidth = "400px";
+    chatWidget.style.maxHeight = "664px";
     chatWidget.style.zIndex = "1000";
     // chatWidget.style.backgroundColor = "#fff";
     // chatWidget.style.border = "1px solid #ccc";
@@ -179,7 +181,7 @@ function createChatWidget() {
             </div>
         </div>`
 
-    // tooltip styling for medical disclaimer
+    // Style tooltip for medical disclaimer
     const tooltip = document.getElementById('tooltip-medical');
     tooltip.style.position = 'relative';
     tooltip.style.display = 'inline-block';
