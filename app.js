@@ -144,8 +144,7 @@ function createChatWidget() {
     chatWidget.setAttribute("id", "chat-widget");
 
     // Add styling classes for responsiveness 
-    chatWidget.className = "rounded-lg border bg-card text-card-foreground shadow-sm justify-between flex-col bg-white h-full ml-4 lg:w-[400px] lg:h-[664px] md:ml-0";
-
+    chatWidget.className = "rounded-lg border bg-card text-card-foreground shadow-sm justify-between flex-col bg-white ml-4 md:ml-0 h-3/4 md:h-[550px] lg:h-[664px]";
 
     // Style chat widget
     chatWidget.style.position = "fixed";
@@ -225,12 +224,12 @@ function createChatWidget() {
     // chat chips
     var chatChipsContainer = document.createElement("div");
     chatChipsContainer.setAttribute("id", "chips-container");
-    chatChipsContainer.className = "flex flex-row space-x-2 pl-2 pr-2 pt-2";
+    chatChipsContainer.className = "flex flex-row space-x-0.5 sm:space-x-1 md:space-x-2 px-0.5 sm:px-1 md:px-2 pt-2";
 
     const chipsText = ["What is it?", "How do I take it?", "Health benefits?"]
     chipsText.forEach((text) => {
         var chatChip = document.createElement("div");
-        chatChip.className = "text-gray-800 px-3 py-1 rounded-full text-xs border-4 border-gray-600 hover:bg-gray-600 hover:text-white cursor-pointer";
+        chatChip.className = "text-gray-800 px-3 py-1 rounded-full flex-grow text-xs text-center border-4 border-gray-600 hover:bg-gray-600 hover:text-white cursor-pointer";
         chatChip.innerText = text;
         chatChipsContainer.appendChild(chatChip);
 
