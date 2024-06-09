@@ -187,8 +187,68 @@ function createChatWidget() {
         .chat-link:hover {
             color: #4c58b3;
         }
+        #notification-circle {
+            position: fixed;
+            bottom: 55px; 
+            right: 17px; 
+            width: 24px;
+            height: 24px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #welcome-text {
+            position: fixed;
+            bottom: 85px;
+            right: 45px;
+            background-color: #1b2d3e;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 1001;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+        #welcome-text::after {
+            content: "";
+            position: absolute;
+            bottom: -10px; /* Adjust this to position the tip */
+            right: 20px; /* Adjust this to align with the text */
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #1b2d3e;
+
+        }
     `;
     document.head.appendChild(styleElement);
+
+    // Notification circle
+    var notificationCircle = document.createElement("div");
+    notificationCircle.setAttribute("id", "notification-circle");
+    notificationCircle.innerText = "1";
+    document.body.appendChild(notificationCircle);
+
+    // Welcome text
+    var welcomeText = document.createElement("div");
+    welcomeText.setAttribute("id", "welcome-text");
+    welcomeText.innerText = "Hello! This is your personal Shilajit chatbot.";
+    document.body.appendChild(welcomeText);
+
+    // Fade out welcome text after 5 seconds
+    setTimeout(() => {
+        welcomeText.style.opacity = "0";
+        setTimeout(() => {
+            welcomeText.remove();
+        }, 1000); // Remove the element after fade out
+    }, 2000);
 
     // Style tooltip for medical disclaimer
     const tooltip = document.getElementById('tooltip-medical');
@@ -293,9 +353,16 @@ function createChatWidget() {
 function toggleChatWidget() {
     var chatWidget = document.getElementById("chat-widget");
     var circleIcon = document.getElementById("circle-icon");
+    var notificationCircle = document.getElementById("notification-circle");
+    var welcomeText = document.getElementById("welcome-text");
+
     if (chatWidget.style.display === "none") {
         chatWidget.style.display = "flex";
         circleIcon.innerHTML = exitLogoSVG;
+        notificationCircle.style.display = "none";
+        if (welcomeText) {
+            welcomeText.style.display = "none"; // Hide welcome text on click
+        }
     } else {
         chatWidget.style.display = "none";
         circleIcon.innerHTML = chatLogoSVG;
