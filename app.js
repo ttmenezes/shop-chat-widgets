@@ -1,11 +1,9 @@
-// Add Tailwind Styles
 var linkElement = document.createElement("link");
 
 linkElement.rel = "stylesheet";
 linkElement.href = "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
 document.head.appendChild(linkElement);
-// --------------------
 
 const chatLogoSVG = `
     <svg width="100" height="87" viewBox="0 0 100 87" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -35,8 +33,6 @@ const chatList = [{
     text: "Hi there! What do you want to know about Black Lotus Shilajit?"
 }]
 
-// render these at the bottom
-
 function scrollToBottom(containerId) {
     var container = document.getElementById(containerId);
     container.scrollTop = container.scrollHeight;
@@ -44,33 +40,21 @@ function scrollToBottom(containerId) {
 }
 
 function pushNewUserChat(chatText) {
-
     chatList.push({
         role: "user",
         text: chatText
     })
 
     renderChats();
-
     scrollToBottom('conversation-scroll-container')
 }
-
-// function pushNewResponse(responseText) {
-//     var convoContainer = document.getElementById("conversation-container");
-
-//     var botResponse = document.createElement("div");
-//     botResponse.className = "rounded-lg p-2 bg-gray-800 text-white dark:bg-gray-800"
-//     botResponse.innerText = responseText;
-
-//     convoContainer.appendChild(botResponse);
-// }
 
 function createNewResponse() {
     var convoContainer = document.getElementById("conversation-container");
 
     var botResponse = document.createElement("div");
-    botResponse.className = "rounded-tl-lg rounded-tr-lg rounded-br-lg p-2 bg-gray-800 text-white dark:bg-gray-800"
-    // botResponse.innerText = responseText;
+    botResponse.className = "rounded-tl-lg rounded-tr-lg rounded-br-lg p-2 bg-gray-800 text-white dark:bg-gray-800";
+    botResponse.innerHTML = '';  // Ensure we use innerHTML for HTML content
 
     convoContainer.appendChild(botResponse);
 
@@ -80,26 +64,36 @@ function createNewResponse() {
 // Function to handle receiving text stream data
 async function handleStreamResponse(response) {
     const reader = response.body.getReader();
-    const responseText = createNewResponse();
+    let responseText = '';  // Accumulate response text
 
     while (true) {
         try {
             const { done, value } = await reader.read();
             if (done) {
+                // Once the stream is done, process the accumulated text
+                console.log('Accumulated text before modification:', responseText);
+                
+                const linkText = "https://blacklotusshilajit.com/pages/contact-us";
+                const linkHtml = `<a href="${linkText}" target="_blank" class="chat-link">${linkText}</a>`;
+                responseText = responseText.replace(linkText, linkHtml);
+                
+                console.log('Accumulated text after modification:', responseText);
+
+                // Append the processed text as HTML
+                const responseElement = createNewResponse();
+                responseElement.innerHTML = responseText;
+
                 chatList.push({
                     role: "bot",
-                    text: responseText.innerText
-                })
+                    text: responseText
+                });
                 renderChats();
                 scrollToBottom('conversation-scroll-container');
                 break; // Exit the loop if stream is done
             }
             const text = new TextDecoder().decode(value);
-            console.log('Received text:', text);
-            // Process the received text here
-            // pushNewResponse(text);
-
-            responseText.innerText += text;
+            console.log('Received text:', text);  // Debugging log to check received text
+            responseText += text;  // Accumulate the text
 
         } catch (error) {
             console.error('Error reading stream:', error);
@@ -107,6 +101,11 @@ async function handleStreamResponse(response) {
         }
     }
 }
+
+
+
+
+
 
 // Function to initiate connection and handle stream
 async function initiateStreamConnection(url, data) {
@@ -153,8 +152,6 @@ function createChatWidget() {
     chatWidget.style.maxWidth = "400px";
     chatWidget.style.maxHeight = "664px";
     chatWidget.style.zIndex = "1000";
-    // chatWidget.style.backgroundColor = "#fff";
-    // chatWidget.style.border = "1px solid #ccc";
     chatWidget.style.display = "none"; // Hide initially
 
     // Append chat widget to the body
@@ -178,7 +175,20 @@ function createChatWidget() {
                     Hi there! What do you want to know about Black Lotus Shilajit?
                 </div>
             </div>
-        </div>`
+        </div>`;
+
+    // Add CSS styles for links
+    var styleElement = document.createElement("style");
+    styleElement.innerHTML = `
+        .chat-link {
+            text-decoration: underline;
+            color: white;
+        }
+        .chat-link:hover {
+            color: #4c58b3;
+        }
+    `;
+    document.head.appendChild(styleElement);
 
     // Style tooltip for medical disclaimer
     const tooltip = document.getElementById('tooltip-medical');
@@ -186,27 +196,27 @@ function createChatWidget() {
     tooltip.style.display = 'inline-block';
 
     const tooltipText = document.createElement('span');
-        tooltipText.className = 'tooltiptext';
-        tooltipText.innerText = 'Black Lotus does not provide medical advice. Please consult a doctor for the benefits and risks of adding any supplement to your diet.';
+    tooltipText.className = 'tooltiptext';
+    tooltipText.innerText = 'Black Lotus does not provide medical advice. Please consult a doctor for the benefits and risks of adding any supplement to your diet.';
 
-        tooltipText.style.visibility = 'hidden';
-        tooltipText.style.position = 'absolute';
-        tooltipText.style.display = "flex";
-        tooltipText.style.justifyContent = "center";
-        tooltipText.style.alignItems = "center";
-        tooltipText.style.width = '15rem';
-        tooltipText.style.backgroundColor = '#d3d3d3';
-        tooltipText.style.color = '#36454F';
-        tooltipText.style.textAlign = 'center';
-        tooltipText.style.borderRadius = '3px';
-        tooltipText.style.padding = '5px 0';
-        tooltipText.style.zIndex = '1';
-        tooltipText.style.bottom = '95%';
-        tooltipText.style.left = '50%';
-        tooltipText.style.marginLeft = '-110px';
-        tooltipText.style.opacity = '0';
-        tooltipText.style.transition = 'opacity 0.2s';
-        tooltipText.style.fontSize = '0.6rem'
+    tooltipText.style.visibility = 'hidden';
+    tooltipText.style.position = 'absolute';
+    tooltipText.style.display = "flex";
+    tooltipText.style.justifyContent = "center";
+    tooltipText.style.alignItems = "center";
+    tooltipText.style.width = '15rem';
+    tooltipText.style.backgroundColor = '#d3d3d3';
+    tooltipText.style.color = '#36454F';
+    tooltipText.style.textAlign = 'center';
+    tooltipText.style.borderRadius = '3px';
+    tooltipText.style.padding = '5px 0';
+    tooltipText.style.zIndex = '1';
+    tooltipText.style.bottom = '95%';
+    tooltipText.style.left = '50%';
+    tooltipText.style.marginLeft = '-110px';
+    tooltipText.style.opacity = '0';
+    tooltipText.style.transition = 'opacity 0.2s';
+    tooltipText.style.fontSize = '0.6rem'
 
     tooltip.appendChild(tooltipText);
 
@@ -219,7 +229,6 @@ function createChatWidget() {
         tooltipText.style.visibility = 'hidden';
         tooltipText.style.opacity = '0';
     });
-
 
     // chat chips
     var chatChipsContainer = document.createElement("div");
@@ -279,6 +288,7 @@ function createChatWidget() {
     chatWidget.appendChild(chatInputContainer);
 }
 
+
 // Function to toggle the chat widget visibility
 function toggleChatWidget() {
     var chatWidget = document.getElementById("chat-widget");
@@ -315,14 +325,10 @@ function createCircleIcon() {
     circleIcon.style.fontSize = "24px";
     circleIcon.style.zIndex = "1000";
 
-    // Set icon text
-    // circleIcon.innerText = "+";
     circleIcon.innerHTML = chatLogoSVG;
 
-    // Add click event listener to toggle chat widget visibility
     circleIcon.addEventListener("click", toggleChatWidget);
 
-    // Append circle icon to the body
     document.body.appendChild(circleIcon);
 }
 
@@ -332,7 +338,7 @@ function renderChats() {
     
     chatList.forEach((chat) => {
         var newChat = document.createElement("div");
-        newChat.innerText = chat.text
+        newChat.innerHTML = chat.text; // Use innerHTML to render HTML content
 
         if (chat.role === "bot") {
             newChat.className = "rounded-tl-lg rounded-tr-lg rounded-br-lg p-2 bg-gray-800 text-white dark:bg-gray-800";
@@ -346,40 +352,4 @@ function renderChats() {
 // Call functions to create and append elements
 createChatWidget();
 createCircleIcon();
-
 renderChats();
-
-
-// deprecated - non-streaming chat response
-// async function postData(url = '', data = {}) {
-//     // Default options are marked with *
-//     const response = await fetch(url, {
-//         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-//         headers: {
-//         'Content-Type': 'application/json'
-//         // 'Content-Type': 'application/x-www-form-urlencoded',
-//         },
-//         body: JSON.stringify(data) // body data type must match "Content-Type" header
-//     });
-
-//     console.log('response',response);
-    
-//     if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//     }
-    
-//     return response.text(); // Return response text
-// }
-
-// function submitChat(text) {
-//     postData(chatEndpointURL, { query: text })
-//         .then(data => {
-//             console.log('Success:', data);
-//             pushNewResponse(data);
-//             // Handle the response data here (data is the text response)
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             // Handle errors here
-//         });
-// }
