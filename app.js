@@ -248,7 +248,7 @@ function createChatWidget() {
         setTimeout(() => {
             welcomeText.remove();
         }, 1000); // Remove the element after fade out
-    }, 2000);
+    }, 5000);
 
     // Style tooltip for medical disclaimer
     const tooltip = document.getElementById('tooltip-medical');
