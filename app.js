@@ -49,63 +49,85 @@ function pushNewUserChat(chatText) {
     scrollToBottom('conversation-scroll-container')
 }
 
-function createNewResponse() {
+function createNewResponse(extraClass = '') {
     var convoContainer = document.getElementById("conversation-container");
 
     var botResponse = document.createElement("div");
-    botResponse.className = "rounded-tl-lg rounded-tr-lg rounded-br-lg p-2 bg-gray-800 text-white dark:bg-gray-800";
-    botResponse.innerHTML = '';  // Ensure we use innerHTML for HTML content
+    botResponse.className = `rounded-tl-lg rounded-tr-lg rounded-br-lg p-2 bg-gray-800 text-white dark:bg-gray-800 ${extraClass}`;
+    botResponse.innerHTML = '';
 
     convoContainer.appendChild(botResponse);
 
     return botResponse;
 }
 
+function addToCart(addToCartUrl) {
+    window.location.href = `https://blacklotusshilajit.com${addToCartUrl}`;
+}
+
 // Function to handle receiving text stream data
 async function handleStreamResponse(response) {
     const reader = response.body.getReader();
-    let responseText = '';  // Accumulate response text
+    const decoder = new TextDecoder("utf-8");
+    let responseText = ''; 
+    let accumulatedResponse = '';
 
     while (true) {
         try {
             const { done, value } = await reader.read();
             if (done) {
-                // Once the stream is done, process the accumulated text
-                console.log('Accumulated text before modification:', responseText);
-                
-                const linkText = "https://blacklotusshilajit.com/pages/contact-us";
-                const linkHtml = `<a href="${linkText}" target="_blank" class="chat-link">${linkText}</a>`;
-                responseText = responseText.replace(linkText, linkHtml);
-                
-                console.log('Accumulated text after modification:', responseText);
-
-                // Append the processed text as HTML
-                const responseElement = createNewResponse();
-                responseElement.innerHTML = responseText;
-
-                chatList.push({
-                    role: "bot",
-                    text: responseText
-                });
-                renderChats();
-                scrollToBottom('conversation-scroll-container');
-                break; // Exit the loop if stream is done
+                console.log("Stream done, accumulated response text:", accumulatedResponse);
+                if (accumulatedResponse) {
+                    try {
+                        let jsonResponse = JSON.parse(accumulatedResponse);
+                        handleJSONResponse(jsonResponse, true);
+                    } catch (parseError) {
+                        console.error("Error parsing accumulated JSON:", parseError, accumulatedResponse);
+                    }
+                }
+                break;
             }
-            const text = new TextDecoder().decode(value);
-            console.log('Received text:', text);  // Debugging log to check received text
-            responseText += text;  // Accumulate the text
-
+            responseText += decoder.decode(value, { stream: true });
+            accumulatedResponse += responseText;
+            responseText = '';
         } catch (error) {
             console.error('Error reading stream:', error);
-            // Handle errors here
         }
     }
 }
 
 
+function handleJSONResponse(jsonResponse, isFinal) {
+    const linkText = "https://blacklotusshilajit.com/pages/contact-us";
+    const linkHtml = `<a href="${linkText}" target="_blank" class="chat-link">${linkText}</a>`;
+    jsonResponse.response = jsonResponse.response.replace(linkText, linkHtml);
 
+    if (isFinal) {
+        const convoContainer = document.getElementById("conversation-container");
+        while (convoContainer.lastChild && convoContainer.lastChild.className.includes('partial-response')) {
+            convoContainer.removeChild(convoContainer.lastChild);
+        }
+    }
 
+    const responseElement = createNewResponse(isFinal ? '' : 'partial-response');
+    responseElement.innerHTML = jsonResponse.response;
 
+    chatList.push({
+        role: "bot",
+        text: jsonResponse.response
+    });
+
+    jsonResponse.products.forEach(product => {
+        const productElement = document.createElement("div");
+        productElement.className = "p-2 mt-2 bg-gray-800 text-white dark:bg-gray-800 rounded-lg";
+        productElement.innerHTML = `
+            <div>${product.name}</div>
+            <div>$${product.price}</div>
+            <button class="add-to-cart" onclick="addToCart('${product.addToCartUrl}')">Add to Cart</button>
+        `;
+        responseElement.appendChild(productElement);
+    });
+}
 
 // Function to initiate connection and handle stream
 async function initiateStreamConnection(url, data) {
@@ -186,6 +208,18 @@ function createChatWidget() {
         }
         .chat-link:hover {
             color: #4c58b3;
+        }
+        .add-to-cart {
+            background-color: #f59e0b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .add-to-cart:hover {
+            background-color: #d97706;
         }
         #notification-circle {
             position: fixed;
