@@ -65,17 +65,30 @@ function addToCart(addToCartUrl) {
     window.location.href = `https://blacklotusshilajit.com${addToCartUrl}`;
 }
 
+function showLoadingDots() {
+    var loadingDots = document.getElementById("loading-dots");
+    loadingDots.style.display = "block";
+}
+
+function hideLoadingDots() {
+    var loadingDots = document.getElementById("loading-dots");
+    loadingDots.style.display = "none";
+}
+
 // Function to handle receiving text stream data
 async function handleStreamResponse(response) {
+    showLoadingDots();
     const reader = response.body.getReader();
     const decoder = new TextDecoder("utf-8");
     let responseText = ''; 
     let accumulatedResponse = '';
 
+
     while (true) {
         try {
             const { done, value } = await reader.read();
             if (done) {
+                hideLoadingDots();
                 console.log("Stream done, accumulated response text:", accumulatedResponse);
                 if (accumulatedResponse) {
                     try {
@@ -92,6 +105,7 @@ async function handleStreamResponse(response) {
             responseText = '';
         } catch (error) {
             console.error('Error reading stream:', error);
+            hideLoadingDots();
         }
     }
 }
@@ -127,11 +141,14 @@ function handleJSONResponse(jsonResponse, isFinal) {
         `;
         responseElement.appendChild(productElement);
     });
+
+    scrollToBottom('conversation-scroll-container');
 }
 
 // Function to initiate connection and handle stream
 async function initiateStreamConnection(url, data) {
     try {
+        showLoadingDots();
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -149,7 +166,7 @@ async function initiateStreamConnection(url, data) {
         await handleStreamResponse(response);
     } catch (error) {
         console.error('Error initiating stream:', error);
-        // Handle errors here
+        hideLoadingDots();
     }
 }
 
@@ -261,6 +278,39 @@ function createChatWidget() {
             border-top: 10px solid #1b2d3e;
 
         }
+        #loading-dots {
+            display: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        #loading-dots div {
+            width: 10px;
+            height: 10px;
+            margin: 3px;
+            background-color: #1b2d3e;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        #loading-dots div:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        #loading-dots div:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+        
     `;
     document.head.appendChild(styleElement);
 
@@ -275,6 +325,14 @@ function createChatWidget() {
     welcomeText.setAttribute("id", "welcome-text");
     welcomeText.innerText = "Hello! This is your personal Shilajit chatbot.";
     document.body.appendChild(welcomeText);
+
+    var loadingDots = document.createElement("div");
+    loadingDots.setAttribute("id", "loading-dots");
+
+    var loadingDots = document.createElement("div");
+    loadingDots.id = "loading-dots";
+    loadingDots.innerHTML = '<div></div><div></div><div></div>';
+    chatWidget.appendChild(loadingDots);
 
     // Fade out welcome text after 5 seconds
     setTimeout(() => {
@@ -367,6 +425,7 @@ function createChatWidget() {
         pushNewUserChat(chatText);
         submitChat(chatText);
         chatInputEl.value = "";
+        scrollToBottom('conversation-scroll-container');
     }
 
     chatSendBtn.addEventListener("click", processChat);
@@ -431,6 +490,14 @@ function createCircleIcon() {
     circleIcon.addEventListener("click", toggleChatWidget);
 
     document.body.appendChild(circleIcon);
+
+    if (document.referrer && !document.referrer.includes("blacklotusshilajit.com")) {
+        notificationCircle.style.display = "flex";
+        welcomeText.style.display = "flex";
+    } else {
+        notificationCircle.style.display = "none";
+        welcomeText.style.display = "none";
+    }
 }
 
 function renderChats() {
