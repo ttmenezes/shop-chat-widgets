@@ -397,6 +397,7 @@ function createChatWidget() {
         chatChip.addEventListener("click", () => {
             pushNewUserChat(text);
             submitChat(text);
+            scrollToBottom('conversation-scroll-container');
         });
     })
 
