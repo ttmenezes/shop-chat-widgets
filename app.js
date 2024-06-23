@@ -61,9 +61,35 @@ function createNewResponse(extraClass = '') {
     return botResponse;
 }
 
-function addToCart(addToCartUrl) {
-    window.location.href = `https://blacklotusshilajit.com${addToCartUrl}`;
+function addToCart(addToCartUrl, productName) {
+    const utmParameters = 'utm_source=chatbot&utm_medium=chat&utm_campaign=add_to_cart';
+    const separator = addToCartUrl.includes('?') ? '&' : '?';
+    const urlWithUtm = `${addToCartUrl}${separator}${utmParameters}`;
+    // Log the click to Firestore
+    fetch('https://us-central1-teak-formula-418902.cloudfunctions.net/black-lotus-shilajit-chat/log-cart-click', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            productName: productName,
+            timestamp: new Date().toISOString()
+        })
+    }).then(response => {
+        if (response.ok) {
+            console.log('Click logged successfully');
+        } else {
+            console.error('Error logging click');
+        }
+        // Redirect after logging
+        window.location.href = `https://blacklotusshilajit.com${urlWithUtm}`;
+    }).catch(error => {
+        console.error('Error logging click:', error);
+        // Redirect even if logging fails
+        window.location.href = `https://blacklotusshilajit.com${urlWithUtm}`;
+    });
 }
+
 
 function showLoadingDots() {
     var loadingDots = document.getElementById("loading-dots");
@@ -137,7 +163,7 @@ function handleJSONResponse(jsonResponse, isFinal) {
         productElement.innerHTML = `
             <div>${product.name}</div>
             <div>$${product.price}</div>
-            <button class="add-to-cart" onclick="addToCart('${product.addToCartUrl}')">Add to Cart</button>
+            <button class="add-to-cart" onclick="addToCart('${product.addToCartUrl}', '${product.id}', '${product.name}')">Add to Cart</button>
         `;
         responseElement.appendChild(productElement);
     });
