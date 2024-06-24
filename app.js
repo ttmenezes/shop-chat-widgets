@@ -66,7 +66,7 @@ function addToCart(addToCartUrl, productName) {
     const separator = addToCartUrl.includes('?') ? '&' : '?';
     const urlWithUtm = `${addToCartUrl}${separator}${utmParameters}`;
     // Log the click to Firestore
-    fetch('https://us-central1-teak-formula-418902.cloudfunctions.net/black-lotus-shilajit-chat/log-cart-click', {
+    fetch('https://us-central1-teak-formula-418902.cloudfunctions.net/black-lotus-shilajit-chat/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -351,7 +351,24 @@ function createChatWidget() {
     welcomeText.setAttribute("id", "welcome-text");
     welcomeText.innerText = "Hello! This is your personal Shilajit chatbot.";
     document.body.appendChild(welcomeText);
+    
+    // Function to check if the current page is the homepage
+    function isHomepage() {
+        return window.location.pathname === "/";
+    }
 
+// Show or hide notification circle and welcome text based on the current page
+    function checkHomepage() {
+        if (isHomepage()) {
+            notificationCircle.style.display = "flex";
+            welcomeText.style.display = "block";
+        } else {
+            notificationCircle.style.display = "none";
+            welcomeText.style.display = "none";
+        }
+    }
+
+    checkHomepage();
     var loadingDots = document.createElement("div");
     loadingDots.setAttribute("id", "loading-dots");
 
@@ -518,13 +535,7 @@ function createCircleIcon() {
 
     document.body.appendChild(circleIcon);
 
-    if (document.referrer && !document.referrer.includes("blacklotusshilajit.com")) {
-        notificationCircle.style.display = "flex";
-        welcomeText.style.display = "flex";
-    } else {
-        notificationCircle.style.display = "none";
-        welcomeText.style.display = "none";
-    }
+    
 }
 
 function renderChats() {
