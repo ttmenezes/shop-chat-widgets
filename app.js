@@ -213,7 +213,7 @@ function createChatWidget() {
     // Style chat widget
     chatWidget.style.position = "fixed";
     chatWidget.style.bottom = "84px";
-    chatWidget.style.right = "20px";
+    chatWidget.style.right = "120px";
     chatWidget.style.maxWidth = "400px";
     chatWidget.style.maxHeight = "664px";
     chatWidget.style.zIndex = "1000";
@@ -336,6 +336,34 @@ function createChatWidget() {
                 transform: scale(1);
             }
         }
+
+        @keyframes unravel {
+            0% {
+                height: 0;
+                opacity: 0;
+            }
+            100% {
+                height: 70%;
+                opacity: 1;
+            }
+        }
+
+        @keyframes ravel {
+            0% {
+                height: 70%;
+                opacity: 1;
+            }
+            100% {
+                height: 0;
+                opacity: 0;
+            }
+        }
+
+        #chat-widget {
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+            animation: unravel 0.5s forwards;
         
     `;
     document.head.appendChild(styleElement);
@@ -495,14 +523,18 @@ function toggleChatWidget() {
 
     if (chatWidget.style.display === "none") {
         chatWidget.style.display = "flex";
+        chatWidget.style.animation = "unravel 0.5s forwards";
         circleIcon.innerHTML = exitLogoSVG;
         notificationCircle.style.display = "none";
         if (welcomeText) {
             welcomeText.style.display = "none"; // Hide welcome text on click
         }
     } else {
-        chatWidget.style.display = "none";
-        circleIcon.innerHTML = chatLogoSVG;
+        chatWidget.style.animation = "ravel 0.5s forwards";
+        setTimeout(() => {
+            chatWidget.style.display = "none";
+            circleIcon.innerHTML = chatLogoSVG;
+        }, 500);
     }
 }
 
@@ -517,7 +549,7 @@ function createCircleIcon() {
     // Style circle icon
     circleIcon.style.position = "fixed";
     circleIcon.style.bottom = "20px";
-    circleIcon.style.right = "20px";
+    circleIcon.style.right = "110px";
     circleIcon.style.width = "50px";
     circleIcon.style.height = "50px";
     circleIcon.style.borderRadius = "50%";
