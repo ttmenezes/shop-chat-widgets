@@ -212,8 +212,8 @@ function createChatWidget() {
 
     // Style chat widget
     chatWidget.style.position = "fixed";
-    chatWidget.style.bottom = "84px";
-    chatWidget.style.right = "120px";
+    chatWidget.style.bottom = "164px";
+    chatWidget.style.right = "20px";
     chatWidget.style.maxWidth = "400px";
     chatWidget.style.maxHeight = "664px";
     chatWidget.style.zIndex = "1000";
@@ -266,8 +266,8 @@ function createChatWidget() {
         }
         #notification-circle {
             position: fixed;
-            bottom: 55px; 
-            right: 17px; 
+            bottom: 135px; 
+            right: 20px; 
             width: 24px;
             height: 24px;
             background-color: red;
@@ -282,8 +282,8 @@ function createChatWidget() {
         }
         #welcome-text {
             position: fixed;
-            bottom: 85px;
-            right: 45px;
+            bottom: 155px;
+            right: 50px;
             background-color: #1b2d3e;
             color: #fff;
             padding: 10px;
@@ -396,7 +396,7 @@ function createChatWidget() {
         }
     }
 
-    checkHomepage();
+    //checkHomepage();
     var loadingDots = document.createElement("div");
     loadingDots.setAttribute("id", "loading-dots");
 
@@ -548,8 +548,8 @@ function createCircleIcon() {
     
     // Style circle icon
     circleIcon.style.position = "fixed";
-    circleIcon.style.bottom = "20px";
-    circleIcon.style.right = "110px";
+    circleIcon.style.bottom = "100px";
+    circleIcon.style.right = "30px";
     circleIcon.style.width = "50px";
     circleIcon.style.height = "50px";
     circleIcon.style.borderRadius = "50%";
