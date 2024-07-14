@@ -62,11 +62,13 @@ function createNewResponse(extraClass = '') {
 }
 
 function addToCart(addToCartUrl, productName) {
-    const utmParameters = 'utm_source=chatbot&utm_medium=chat&utm_campaign=add_to_cart';
-    const separator = addToCartUrl.includes('?') ? '&' : '?';
-    const urlWithUtm = `${addToCartUrl}${separator}${utmParameters}`;
+    console.log('addToCartUrl:', addToCartUrl);
+    console.log('productName:', productName);
+
+    const urlWithUtm = addToCartUrl;
+    
     // Log the click to Firestore
-    fetch('https://us-central1-teak-formula-418902.cloudfunctions.net/black-lotus-shilajit-chat/', {
+    fetch('https://us-central1-teak-formula-418902.cloudfunctions.net/black-lotus-shilajit-chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -89,6 +91,8 @@ function addToCart(addToCartUrl, productName) {
         window.location.href = `https://blacklotusshilajit.com${urlWithUtm}`;
     });
 }
+
+
 
 
 function showLoadingDots() {
@@ -163,7 +167,7 @@ function handleJSONResponse(jsonResponse, isFinal) {
         productElement.innerHTML = `
             <div>${product.name}</div>
             <div>$${product.price}</div>
-            <button class="add-to-cart" onclick="addToCart('${product.addToCartUrl}', '${product.id}', '${product.name}')">Add to Cart</button>
+            <button class="add-to-cart" onclick="addToCart('${product.addToCartUrl}', '${product.name}')">Add to Cart</button>
         `;
         responseElement.appendChild(productElement);
     });
