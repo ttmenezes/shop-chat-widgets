@@ -216,7 +216,7 @@ function createChatWidget() {
 
     // Style chat widget
     chatWidget.style.position = "fixed";
-    chatWidget.style.bottom = "164px";
+    chatWidget.style.bottom = "84px";
     chatWidget.style.right = "20px";
     chatWidget.style.maxWidth = "400px";
     chatWidget.style.maxHeight = "664px";
@@ -270,7 +270,7 @@ function createChatWidget() {
         }
         #notification-circle {
             position: fixed;
-            bottom: 135px; 
+            bottom: 59px; 
             right: 20px; 
             width: 24px;
             height: 24px;
@@ -286,7 +286,7 @@ function createChatWidget() {
         }
         #welcome-text {
             position: fixed;
-            bottom: 155px;
+            bottom: 79px;
             right: 50px;
             background-color: #1b2d3e;
             color: #fff;
@@ -552,8 +552,8 @@ function createCircleIcon() {
     
     // Style circle icon
     circleIcon.style.position = "fixed";
-    circleIcon.style.bottom = "100px";
-    circleIcon.style.right = "30px";
+    circleIcon.style.bottom = "20px";
+    circleIcon.style.right = "20px";
     circleIcon.style.width = "50px";
     circleIcon.style.height = "50px";
     circleIcon.style.borderRadius = "50%";
