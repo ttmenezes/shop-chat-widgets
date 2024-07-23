@@ -143,8 +143,11 @@ async function handleStreamResponse(response) {
 
 function handleJSONResponse(jsonResponse, isFinal) {
     const linkText = "https://blacklotusshilajit.com/pages/contact-us";
+    const aflinkText = "https://af.uppromote.com/black-lotus-shilajit-shop/register";
     const linkHtml = `<a href="${linkText}" target="_blank" class="chat-link">${linkText}</a>`;
+    const aflinkHtml = `<a href="${aflinkText}" target="_blank" class="chat-link">${aflinkText}</a>`;
     jsonResponse.response = jsonResponse.response.replace(linkText, linkHtml);
+    jsonResponse.response = jsonResponse.response.replace(aflinkText, aflinkHtml);
 
     if (isFinal) {
         const convoContainer = document.getElementById("conversation-container");
